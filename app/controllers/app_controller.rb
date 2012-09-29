@@ -31,6 +31,7 @@ class AppController < ApplicationController
   end
 
   def locations_create
+    params[:location][:user_id] = current_user.id
     @aq.create_location(params[:location])
     redirect_to locations_path
   end

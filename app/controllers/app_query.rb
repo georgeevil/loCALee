@@ -4,7 +4,7 @@ class AppQuery
   #  DO NOT MODIFY THIS SECTION  #
   ################################
 
-  attr_accessor :posts
+  attr_accessor :posts  
   attr_accessor :users
   attr_accessor :user
   attr_accessor :locations
@@ -114,7 +114,9 @@ class AppQuery
   # Assign: None
   # Output: true if the creation is successful, false otherwise
   def create_location(location_hash={})
-    false
+    location_hash['user_id'] = User.current.id
+    @location = Location.new(location_hash)
+    @location.save
   end
 
   # Purpose: The current user follows a location
@@ -207,7 +209,7 @@ class AppQuery
   #     * :email - email of th user
   # Output: None
   def get_all_users
-    @users = []
+    @users = User.all
   end
 
   # Purpose: Get all the locations
@@ -222,7 +224,7 @@ class AppQuery
   #     * :longitude - the longitude
   # Output: None
   def get_all_locations
-    @locations = []
+    @locations = Location.all
   end
 
   # Retrieve the top 5 users who created the most posts.

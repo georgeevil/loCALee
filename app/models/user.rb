@@ -15,7 +15,17 @@ class User < ActiveRecord::Base
   ############################################
   #  TODO: you may optionally add code here  #
   ############################################
+    
+  has_many :locations
   
+  
+  def self.current
+     Thread.current[:user]
+   end
+   def self.current=(user)
+     Thread.current[:user] = user
+   end
+
   def to_hash
     {
       :id => self.id,
