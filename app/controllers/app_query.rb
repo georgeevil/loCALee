@@ -114,7 +114,6 @@ class AppQuery
   # Assign: None
   # Output: true if the creation is successful, false otherwise
   def create_location(location_hash={})
-    location_hash['user_id'] = User.current.id
     @location = Location.new(location_hash)
     @location.save
   end
