@@ -155,7 +155,9 @@ class AppQuery
   # Assign: None
   # Output: true if the creation is successful, false otherwise
   def create_post(user_id, post_hash={})
-    false
+    post_hash[:user_id] = user_id
+    @post = Post.new(post_hash)
+    @post.save
   end
 
   # Purpose: Create a new user

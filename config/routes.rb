@@ -20,6 +20,7 @@ Cs186p2::Application.routes.draw do
   match "locations/:id/unfollow" => "app#location_unfollow", :as => "unfollow_location", :via => :post
   match "nearby_locations" => "app#nearby_locations_index", :as => "nearby_locations", :via => :post
   match "reports" => "app#reports_index", :as => "reports", :via => :get
+  #default route RESTful associaton
   #  resources :locations
 
   # Posts
