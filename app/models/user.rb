@@ -17,6 +17,8 @@ class User < ActiveRecord::Base
   ############################################
     
   has_many :posts
+  has_many :follows
+  has_many :locations, :through => :follows 
   
   
   def self.current

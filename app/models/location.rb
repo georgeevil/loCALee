@@ -3,4 +3,7 @@ class Location < ActiveRecord::Base
   validates :longitude, :presence => true
   validates :name, :presence => true
   attr_accessible :latitude, :longitude, :name
+  
+  has_many :follows
+  has_many :users, :through => :follows
 end

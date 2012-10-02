@@ -11,7 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120930210314) do
+ActiveRecord::Schema.define(:version => 20121002205819) do
+
+  create_table "follows", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "location_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "follows", ["location_id"], :name => "index_follows_on_location_id"
+  add_index "follows", ["user_id", "location_id"], :name => "index_follows_on_user_id_and_location_id", :unique => true
+  add_index "follows", ["user_id"], :name => "index_follows_on_user_id"
 
   create_table "locations", :force => true do |t|
     t.decimal  "longitude",  :precision => 15, :scale => 10

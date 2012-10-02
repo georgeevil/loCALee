@@ -1,0 +1,37 @@
+Connecting to database specified by database.yml
+Connecting to database specified by database.yml
+  [1m[36m (0.1ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations" [0m
+Migrating to CreateUsers (20120905195452)
+Migrating to CreateLocations (20120928014550)
+Migrating to CreatePosts (20120930210314)
+Migrating to CreateFollows (20121002205819)
+  [1m[35m (0.0ms)[0m  select sqlite_version(*)
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.5ms)[0m  CREATE TABLE "follows" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "location_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_list("follows")[0m
+  [1m[35m (0.2ms)[0m  CREATE INDEX "index_follows_on_user_id" ON "follows" ("user_id")
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_list("follows")[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_info('index_follows_on_user_id')
+  [1m[36m (0.2ms)[0m  [1mCREATE INDEX "index_follows_on_location_id" ON "follows" ("location_id")[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("follows")
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_info('index_follows_on_location_id')[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_info('index_follows_on_user_id')
+  [1m[36m (0.3ms)[0m  [1mCREATE UNIQUE INDEX "index_follows_on_user_id_and_location_id" ON "follows" ("user_id", "location_id")[0m
+  [1m[35m (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20121002205819')
+  [1m[36m (12.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.5ms)[0m  select sqlite_version(*)
+  [1m[36m (0.1ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations" [0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("follows")
+  [1m[36m (0.1ms)[0m  [1mPRAGMA index_info('index_follows_on_user_id_and_location_id')[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_info('index_follows_on_location_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_follows_on_user_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("locations")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("posts")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_posts_on_location_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_posts_on_user_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("users")
+Connecting to database specified by database.yml
+Connecting to database specified by database.yml
+Connecting to database specified by database.yml
+SQLite3::ConstraintException: columns user_id, location_id are not unique: INSERT INTO "follows" ("created_at", "location_id", "updated_at", "user_id") VALUES (?, ?, ?, ?)
+SQLite3::ConstraintException: columns user_id, location_id are not unique: INSERT INTO "follows" ("created_at", "location_id", "updated_at", "user_id") VALUES (?, ?, ?, ?)
