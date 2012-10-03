@@ -76,7 +76,7 @@ class AppQuery
   #         * :longitude - the longitude
   # Output: None
   def get_stream_for_user(user_id)
-    @posts = []
+    @posts = User.find_by_id(user_id).posts
   end
 
   # Purpose: Retrieve the locations within a GPS bounding box
@@ -130,7 +130,8 @@ class AppQuery
   def follow_location(user_id, location_id)
     begin
       Follow.create(:user_id => user_id, :location_id => user_id)
-    rescue
+    rescue ActiveRecord::RecordNotUnique::SQLite3::ConstraintException => exception
+      flash[:notice] = "Combination of user_id ", user_id, " and :location_id ", location_id, " already exists!"
       puts "Combination of user_id ", user_id, " and :location_id ", location_id, " already exists!"
     end
   end
@@ -145,6 +146,7 @@ class AppQuery
   #       we may call it multiple times to test your schema/models.
   #       Your schema/models/code should prevent corruption of the database.
   def unfollow_location(user_id, location_id)
+    
   end
 
   # Purpose: The current user creates a post to a given location
@@ -160,8 +162,8 @@ class AppQuery
   # Assign: None
   # Output: true if the creation is successful, false otherwise
   def create_post(user_id, post_hash={})
-    post_hash[:user_id] = user_id
-    @post = Post.new(post_hash)
+    
+    @post = User.find_by_id(user_id).posts.create(post_hash)
     @post.save
   end
 
