@@ -28,7 +28,7 @@ class AppQuery
   #     * :longitude - the longitude
   # Output: None
   def get_following_locations(user_id)
-    @following_locations = []
+    @following_locations = User.find_by_id(user_id).locations
   end
 
   # Purpose: Show the information and all posts for a given location
@@ -54,8 +54,8 @@ class AppQuery
   #         * :longitude - the longitude
   # Output: None
   def get_posts_for_location(location_id)
-    @location = {}
-    @posts = []
+    @location = Location.find_by_id(location_id)
+    @posts = @location.posts
   end
 
   # Purpose: Show the current user's stream of posts from all the locations the user follows
@@ -128,6 +128,11 @@ class AppQuery
   #       we may call it multiple times to test your schema/models.
   #       Your schema/models/code should prevent corruption of the database.
   def follow_location(user_id, location_id)
+    begin
+      Follow.create(:user_id => user_id, :location_id => user_id)
+    rescue
+      puts "Combination of user_id ", user_id, " and :location_id ", location_id, " already exists!"
+    end
   end
 
   # Purpose: The current user unfollows a location
