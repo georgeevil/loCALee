@@ -146,7 +146,12 @@ class AppQuery
   #       we may call it multiple times to test your schema/models.
   #       Your schema/models/code should prevent corruption of the database.
   def unfollow_location(user_id, location_id)
-    
+    f = Follow.where(:user_id => user_id, :location_id => location_id)
+    if f.empty?
+      return
+    else
+      f[0].delete
+    end
   end
 
   # Purpose: The current user creates a post to a given location
