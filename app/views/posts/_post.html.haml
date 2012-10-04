@@ -5,4 +5,4 @@
   %small
     =time_ago_in_words(post[:created_at])
     ago at
-    =link_to post[:location][:name], location_path(post[:location][:id])
+    =link_to post.location[:name], location_path(post.location[:id])

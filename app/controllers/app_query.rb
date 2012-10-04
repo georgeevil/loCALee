@@ -55,7 +55,11 @@ class AppQuery
   # Output: None
   def get_posts_for_location(location_id)
     @location = Location.find_by_id(location_id)
-    @posts = @location.posts
+    if @location
+      @posts = @location.posts
+    else
+      @location = Location.last
+    end
   end
 
   # Purpose: Show the current user's stream of posts from all the locations the user follows
@@ -98,7 +102,15 @@ class AppQuery
   #     * :follows - true if the current user follows this location. false otherwise.
   # Output: None
   def get_nearby_locations(nelat, nelng, swlat, swlng, user_id)
-    @locations = []
+    @locations = Location.where("latitude < #{nelat} and longitude < #{nelng} and latitude > #{swlat} and longitude > #{swlng}").limit(50).order('latitude ASC')
+    
+    usr = User.find_by_id(user_id)
+    @locations.each do |l|
+      if l.in?(usr.locations)
+        l[:follows] = true
+      end
+    end
+    
   end
 
   # Purpose: Create a new location
@@ -129,10 +141,10 @@ class AppQuery
   #       Your schema/models/code should prevent corruption of the database.
   def follow_location(user_id, location_id)
     begin
-      Follow.create(:user_id => user_id, :location_id => user_id)
+      Follow.create(:user_id => user_id, :location_id => location_id)
     rescue ActiveRecord::RecordNotUnique::SQLite3::ConstraintException => exception
       flash[:notice] = "Combination of user_id ", user_id, " and :location_id ", location_id, " already exists!"
-      puts "Combination of user_id ", user_id, " and :location_id ", location_id, " already exists!"
+      #puts "Combination of user_id ", user_id, " and :location_id ", location_id, " already exists!"
     end
   end
 
@@ -247,7 +259,7 @@ class AppQuery
   #   * name - name of the user
   #   * num_posts - number of posts the user has created
   def top_users_posts_sql
-    "SELECT '' AS name, 0 AS num_posts FROM users WHERE 1=2"
+    "SELECT u.name AS name, COUNT(*) AS num_posts FROM users u, posts p WHERE u.id = p.user_id GROUP BY u.id ORDER BY -COUNT(*) LIMIT 5"
   end
 
   # Retrieve the top 5 locations with the most unique posters. Only retrieve locations with at least 2 unique posters.
@@ -257,7 +269,7 @@ class AppQuery
   #   * name - name of the location
   #   * num_users - number of unique users who have posted to the location
   def top_locations_unique_users_sql
-    "SELECT '' AS name, 0 AS num_users FROM users WHERE 1=2"
+    "Select l.name AS name, COUNT(DISTINCT p.user_id) AS num_users FROM locations l, posts p WHERE l.id = p.location_id GROUP BY l.id HAVING COUNT(DISTINCT p.user_id) > 1 ORDER BY -COUNT(DISTINCT p.user_id) LIMIT 5"
   end
 
   # Retrieve the top 5 users who follow the most locations, where each location has at least 2 posts
@@ -267,7 +279,7 @@ class AppQuery
   #   * name - name of the user
   #   * num_locations - number of locations (has at least 2 posts) the user follows
   def top_users_locations_sql
-    "SELECT '' AS name, 0 AS num_locations FROM users WHERE 1=2"
+    "SELECT u.name AS name, COUNT(*) AS num_locations FROM follows f, users u,locations l WHERE u.id = f.user_id and l.id = f.location_id and EXISTS (SELECT * FROM posts p1, posts p2 WHERE l.id = p1.location_id and l.id = p2.location_id and p1.id != p2.id) GROUP BY f.user_id ORDER BY -COUNT(*) LIMIT 5"
   end
 
 end

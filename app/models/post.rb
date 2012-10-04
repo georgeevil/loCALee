@@ -1,7 +1,7 @@
 class Post < ActiveRecord::Base
   belongs_to :user
   belongs_to :location
-  attr_accessible :name, :text, :location
+  attr_accessible :text, :location_id, :location
   validates :user, :presence => true
   validates :location, :presence => true
   
@@ -11,5 +11,6 @@ class Post < ActiveRecord::Base
   
   def author_id
     user.id
-  end  
+  end
+  
 end

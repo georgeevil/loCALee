@@ -33,7 +33,6 @@ ActiveRecord::Schema.define(:version => 20121002205819) do
   end
 
   create_table "posts", :force => true do |t|
-    t.string   "name"
     t.text     "text"
     t.integer  "user_id"
     t.integer  "location_id"
